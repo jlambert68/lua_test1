@@ -7,9 +7,47 @@ import (
 	"lua_test1/go_modules_called_from_lua"
 )
 
+func listLibraries(L *lua.LState) {
+	// The preloaded libraries are stored under the lua.LPreload table key
+	preloadTable := L.GetField(L.GetField(L.Get(lua.EnvironIndex), "package"), "preload")
+
+	// Iterate over the preloadTable (which is expected to be a *lua.LTable)
+	if tbl, ok := preloadTable.(*lua.LTable); ok {
+		fmt.Println("Preloaded libraries:")
+		tbl.ForEach(func(key lua.LValue, value lua.LValue) {
+			fmt.Println(key.String())
+		})
+	}
+}
+
 func main() {
 	L := lua.NewState()
 	defer L.Close()
+
+	// Load safe libraries only
+	//L.PreloadModule("base", lua.BaseOpen)
+	//L.PreloadModule("table", lua.TableOpen)
+	//L.PreloadModule("string", lua.StringOpen)
+	//L.PreloadModule("math", lua.MathOpen)
+
+	// Load standard libraries
+	L.OpenLibs()
+
+	// List preloaded libraries
+	listLibraries(L)
+
+	// Remove or stub unsafe functions
+	L.SetGlobal("io", lua.LNil)       // Remove the 'io' library
+	L.SetGlobal("os", lua.LNil)       // Remove the 'os' library
+	L.SetGlobal("dofile", lua.LNil)   // Remove the 'dofile' function
+	L.SetGlobal("loadfile", lua.LNil) // Remove the 'loadfile' function
+
+	// Verify that os functions can't be executed
+	err := L.DoFile("lua_scripts/os_test.lua")
+
+	if err == nil {
+		log.Fatal("Should be stoped")
+	}
 
 	// Load the Lua script
 	if err := L.DoFile("lua_scripts/simpe_scritpt_called_from_go.lua"); err != nil {
@@ -18,7 +56,7 @@ func main() {
 
 	// Call function with input parameters and a response
 
-	err := L.CallByParam(lua.P{
+	err = L.CallByParam(lua.P{
 		Fn:      L.GetGlobal("functionOne"),
 		NRet:    1,
 		Protect: true,
