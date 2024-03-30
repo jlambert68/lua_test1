@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/yuin/gopher-lua"
 	"log"
+	"lua_test1/go_modules_called_from_lua"
 )
 
 func main() {
@@ -126,4 +127,13 @@ func main() {
 	}); err != nil {
 		log.Fatal(err)
 	}
+
+	// Lua calls a go-module
+	L3 := lua.NewState()
+	defer L3.Close()
+	L3.PreloadModule("go_modules_called_from_lua", go_modules_called_from_lua.Loader)
+	if err := L3.DoFile("lua_scripts/call_go_modules.lua"); err != nil {
+		panic(err)
+	}
+
 }
