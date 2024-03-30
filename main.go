@@ -15,6 +15,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Call function with input parameters and a response
+
 	err := L.CallByParam(lua.P{
 		Fn:      L.GetGlobal("functionOne"),
 		NRet:    1,
@@ -31,6 +33,8 @@ func main() {
 
 	fmt.Println(ret)
 
+	// Call a functione with other function as in-parameter and that function is then call from inside lua
+
 	err = L.CallByParam(lua.P{
 		Fn:      L.GetGlobal("callFunctionByName"),
 		NRet:    0,
@@ -41,7 +45,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	ret = L.Get(-1) // returned value
+	//ret = L.Get(-1) // returned value
 	//	L.Pop(1)        // remove received value
 
 	fmt.Println(ret)
@@ -100,7 +104,7 @@ func main() {
 			log.Println("Unexpected type of result")
 		}
 	*/
-	// Shared function
+	// Shared function in another script file
 	L2 := lua.NewState()
 	defer L2.Close()
 
