@@ -1,11 +1,17 @@
 local date = require('date')
 
 -- Function to shift the current date by a given number of days
-function subCustodyTodayShiftDay(inputArray)
+function SubCustodyTodayShiftDay(inputArray)
     local d = date()
 
+
+    if #inputArray ~= 4 then
+        return "Error - there should be exactly four parameters in InputArray."
+
+    end
+
     -- Extract ArraysIndexArray
-    local arraysIndexArray = inputArray[0]
+    local arraysIndexArray = inputArray[2]
 
    -- Secure that no ArraysIndexArray is emtpty
    if (#arraysIndexArray > 0) then
@@ -15,7 +21,8 @@ function subCustodyTodayShiftDay(inputArray)
    end
 
    -- Extract FunctionArgumentsArray
-   local functionArgumentsArray = inputArray[1]
+   local functionArgumentsArray = inputArray[3]
+
 
    -- Handle different number of function arguments
     local shift_days = 0
@@ -23,7 +30,7 @@ function subCustodyTodayShiftDay(inputArray)
        shift_days = 0
 
    elseif (#functionArgumentsArray == 1) then
-        shift_days = functionArgumentsArray[0]
+        shift_days = functionArgumentsArray[1]
 
 
     else 
@@ -38,28 +45,24 @@ function subCustodyTodayShiftDay(inputArray)
     local now = date()
 
     -- Add days
-    local futureDate = now:adddays(shiftDays)
+    local futureDate = now:adddays(shift_days)
     return  futureDate:fmt("%Y-%m-%d")
 
 end
 
-    -- Example usage with shiftDays = 5
-    local shiftedDate = subCustodyTodayShiftDay(-5)
-    print(shiftedDate)
 
-
-function tengoScriptStartingPoint(inputArray)
+function TengoScriptStartingPoint(inputArray)
+    print("Entering...")
     if #inputArray ~= 4 then
         return "Error - there should be exactly four parameters in InputArray."
 
     end
 
     local functionName = inputArray[1]
-    local functionArguments = inputArray[2]
+    local functionArguments = inputArray[3]
 
     if functionName == "SubCustody_TodayShiftDay" then
-        local shiftDays = functionArguments[1]
-        return subCustodyTodayShiftDay(shiftDays)
+        return SubCustodyTodayShiftDay(inputArray)
 
     else
         return "ERROR - Unknown function '" .. functionName .. "'"
@@ -68,6 +71,6 @@ function tengoScriptStartingPoint(inputArray)
 end
 
 -- Example invocation
-local result = tengoScriptStartingPoint{"SubCustody_TodayShiftDay", {5}, {}, 0}
+local result = TengoScriptStartingPoint{"SubCustody_TodayShiftDay", {}, {0}, 0}
 print(result)
 
