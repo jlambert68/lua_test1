@@ -1,27 +1,54 @@
 local date = require('date')
 
 -- Function to shift the current date by a given number of days
-function SubCustodyTodayShiftDay(inputArray)
+function SubCustody_TodayShiftDay(inputTable)
     local d = date()
+    
+    --inputTable = {
+    --    functionName = "SubCustody_TodayShiftDay",
+    --    functionArrayPositions = {1, 3},
+    --    functionValuesArray = {3, 8, 9},
+    --    randomSeed = 4
+    --}
+
+    local responseTable = {
+        success = true,
+        value = "",
+        errorMessage = ""
+    }
 
 
-    if #inputArray ~= 4 then
-        return "Error - there should be exactly four parameters in InputArray."
+    if #inputTable ~= 4 then
+
+        local error_message = "Error - there should be exactly four rows in InputTable."
+
+        responseTable.success = false
+        responseTable.errorMessage = error_message
+
+        return responseTable
 
     end
 
     -- Extract ArraysIndexArray
-    local arraysIndexArray = inputArray[2]
+    local arraysIndexTable = inputTable[2]
 
    -- Secure that no ArraysIndexArray is emtpty
-   if (#arraysIndexArray > 0) then
-       local error_message = "Error - array index is not supported. 'arraysIndexArray: " .. arraysIndexArray .. "'"
+   if (#arraysIndexTable > 0) then
 
-       return error_message
+    -- Convert array to string
+    local tableAsString = TableToString (arraysIndexTable, ",")
+
+       local error_message = "Error - array index is not supported. 'arraysIndexArray: " .. tableAsString .. "'"
+
+       responseTable.success = false
+       responseTable.errorMessage = error_message
+
+       return responseTable
+
    end
 
    -- Extract FunctionArgumentsArray
-   local functionArgumentsArray = inputArray[3]
+   local functionArgumentsArray = inputTable[3]
 
 
    -- Handle different number of function arguments
@@ -46,31 +73,33 @@ function SubCustodyTodayShiftDay(inputArray)
 
     -- Add days
     local futureDate = now:adddays(shift_days)
-    return  futureDate:fmt("%Y-%m-%d")
+
+
+    responseTable.value = futureDate:fmt("%Y-%m-%d")
+
+    return responseTable
+
 
 end
 
 
-function TengoScriptStartingPoint(inputArray)
-    print("Entering...")
-    if #inputArray ~= 4 then
-        return "Error - there should be exactly four parameters in InputArray."
 
+
+function TableToString(tbl, sep)
+    sep = sep or ", "
+    local result = "["
+    for _, v in ipairs(tbl) do
+        result = result .. tostring(v) .. sep
     end
 
-    local functionName = inputArray[1]
-    local functionArguments = inputArray[3]
+    result = result:sub(1, -#sep - 1)
 
-    if functionName == "SubCustody_TodayShiftDay" then
-        return SubCustodyTodayShiftDay(inputArray)
+    result = result .. "]"
 
-    else
-        return "ERROR - Unknown function '" .. functionName .. "'"
-
-    end
+    return result
 end
 
 -- Example invocation
-local result = TengoScriptStartingPoint{"SubCustody_TodayShiftDay", {}, {0}, 0}
-print(result)
+--local result = TengoScriptStartingPoint{"SubCustody_TodayShiftDay", {}, {0}, 0}
+--print(result)
 
