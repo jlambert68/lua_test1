@@ -9,8 +9,8 @@
             "type": "lua",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/tests/test_SubCustody_TodayDateShift.lua"
-            //"program": "${workspaceFolder}/src/SubCusotdy_TodayDateShift.lua"
+            //"program": "${workspaceFolder}/tests/test_SubCustody_TodayDateShift.lua"
+            "program": "${workspaceFolder}/src/SubCusotdy_TodayDateShift.lua"
         },
 
     ]

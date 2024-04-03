@@ -60,10 +60,15 @@ function SubCustody_TodayShiftDay(inputTable)
         shift_days = functionArgumentsArray[1]
 
 
-    else 
-       local error_message = "Error - more than 1 parameter argument. 'functionArgumentsArray: " .. functionArgumentsArray .. "'"
+    else
+        local tableAsString = TableToString (functionArgumentsArray, ",")
 
-       return error_message
+        local error_message = "Error - more than 1 parameter argument. 'functionArgumentsArray: " .. tableAsString .. "'"
+
+        responseTable.success = false
+        responseTable.errorMessage = error_message
+
+       return responseTable
 
     end
 
@@ -100,6 +105,6 @@ function TableToString(tbl, sep)
 end
 
 -- Example invocation
---local result = TengoScriptStartingPoint{"SubCustody_TodayShiftDay", {}, {0}, 0}
---print(result)
+local result = SubCustody_TodayShiftDay{"SubCustody_TodayShiftDay", {}, {1, 2}, 0}
+print(result)
 
