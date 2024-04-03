@@ -1,0 +1,21 @@
+
+local assert = require "luassert"
+local mymodule = require('src/SubCustody_RandomPositiveFloatValue.lua')
+local date = require('date')
+
+local tests = {}
+
+-- Check that Todays date is produced
+function tests.is_today_no_parameter()
+
+
+    local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{2, 3}, 0}
+    local response = SubCustody_RandomPositiveFloatValue(inputArray)
+
+    assert.is_equal(expectedDateResponse, response.value)
+    assert.is_equal(true, response.success)
+    assert.is_equal("", response.errorMessage)
+
+
+end
+

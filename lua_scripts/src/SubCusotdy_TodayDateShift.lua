@@ -17,7 +17,7 @@ function SubCustody_TodayShiftDay(inputTable)
         errorMessage = ""
     }
 
-
+    -- There must be 4 rows in the InputTable
     if #inputTable ~= 4 then
 
         local error_message = "Error - there should be exactly four rows in InputTable."
@@ -79,7 +79,6 @@ function SubCustody_TodayShiftDay(inputTable)
     -- Add days
     local futureDate = now:adddays(shift_days)
 
-
     responseTable.value = futureDate:fmt("%Y-%m-%d")
 
     return responseTable
@@ -105,6 +104,6 @@ function TableToString(tbl, sep)
 end
 
 -- Example invocation
-local result = SubCustody_TodayShiftDay{"SubCustody_TodayShiftDay", {}, {1, 2}, 0}
-print(result)
+--local result = SubCustody_TodayShiftDay{"SubCustody_TodayShiftDay", {}, {1, 2}, 0}
+--print(result)
 
