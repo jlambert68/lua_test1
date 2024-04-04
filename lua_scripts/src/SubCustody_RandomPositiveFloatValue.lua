@@ -87,7 +87,7 @@ local function formatFloat(number, numberOfDecimals)
 
     else
         return str
-        
+
     end
 
 end
@@ -102,9 +102,6 @@ end
 
 
 local function randomize(index, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer)
-
-    print(index)
-    print(testCaseUuidRandomizer)
 
     math.randomseed(testCaseUuidRandomizer+ index)
 
