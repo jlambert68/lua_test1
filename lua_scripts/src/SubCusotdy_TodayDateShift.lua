@@ -90,15 +90,24 @@ end
 
 
 function TableToString(tbl, sep)
-    sep = sep or ", "
-    local result = "["
-    for _, v in ipairs(tbl) do
-        result = result .. tostring(v) .. sep
+
+    -- More then one parameter in table
+    if #tbl > 1 then
+        sep = sep or ", "
+        local result = "["
+        for _, v in ipairs(tbl) do
+            result = result .. tostring(v) .. sep
+        end
+
+        result = result:sub(1, -#sep - 1)
+
+        result = result .. "]"
+
+        return result
     end
 
-    result = result:sub(1, -#sep - 1)
-
-    result = result .. "]"
+    -- Only one parameter in table
+    local result = tostring(tbl)
 
     return result
 end
