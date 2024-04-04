@@ -4,9 +4,9 @@ function ProcessConstrolledUniqueId(input, inputTable)
         error("Input must be a string, got " .. type(input))
     end
 
-    local function randomString(length, upper, seed)
-        if seed ~= nil then
-            math.randomseed(seed)
+    local function randomString(length, upper, seedValue)
+        if seedValue ~= nil then
+            math.randomseed(seedValue)
         end
 
         local chars = upper and 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or 'abcdefghijklmnopqrstuvwxyz'
@@ -23,12 +23,18 @@ function ProcessConstrolledUniqueId(input, inputTable)
     end
 
     local function replaceRandomNumber(pattern, seedValue)
+        
+        math.randomseed(seedValue)
+
         input = input:gsub(pattern, function(n) 
             return string.format("%0"..#n.."d", math.random(10^#n-1))
         end)
     end
 
-    local function replaceRandomString(pattern, upper)
+    local function replaceRandomString(pattern, upper, seedValue)
+
+        math.randomseed(seedValue)
+
         input = input:gsub(pattern, function(n, seed) 
             return randomString(tonumber(n), upper, tonumber(seed))
         end)
@@ -51,13 +57,13 @@ function ProcessConstrolledUniqueId(input, inputTable)
 
 
     -- Replace time with milliseconds
-    input = input:gsub("%%hh:mm:ss%.(n+)%%", function(n)
-        return os.date("%H:%M:%S.") .. string.format("%0"..#n.."d", math.random(10^#n-1))
+    input = input:gsub("%%hh:mm:ss%%", function()
+        return os.date("%H:%M:%S")
     end)
-    input = input:gsub("%%hh%.mm%.ss%.(n+)%%", function(n)
-        return os.date("%H.%M.%S.") .. string.format("%0"..#n.."d", math.random(10^#n-1))
+    input = input:gsub("%%hh.mm.ss%%", function()
+        return os.date("%H.%M.%S")
     end)
-    
+
     -- Create seed value
     local arrayPosition  = arrayPositionTable[1]
     local seedValue = 0
@@ -73,8 +79,8 @@ function ProcessConstrolledUniqueId(input, inputTable)
     replaceRandomNumber("%%(n+)%%", seedValue)
 
     -- Replace random string patterns with seeding
-    replaceRandomString("%%a%((%d+),%s*(%d+)%)%%", false)
-    replaceRandomString("%%A%((%d+),%s*(%d+)%)%%", true)
+    replaceRandomString("%%a%((%d+),%s*(%d+)%)%%", false, seedValue)
+    replaceRandomString("%%A%((%d+),%s*(%d+)%)%%", true, seedValue)
 
     return input
 end
@@ -101,7 +107,7 @@ function ConstrolledUniqueId(inputTable)
 
 end
 -- Example usage
-local inputString = "Date: %YYYY-MM-DD%, Date: %YYYYMMDD%, Date: %YYMMDD%, Time: %hh:mm:ss%, Time: %hhmmss%, Time: %hhmm%, Random Number: %nnnnn%, Random String: %a(5, 11)%, Random String Uppercase: %A(5, 10)%, Time: %hh:mm:ss.nnnn%, Time: %hh.mm.ss.nnnn% "
+local inputString = "Date: %YYYY-MM-DD%, Date: %YYYYMMDD%, Date: %YYMMDD%, Time: %hh:mm:ss%, Time: %hhmmss%, Time: %hhmm%, Random Number: %nnnnn%, Random String: %a(5, 11)%, Random String Uppercase: %A(5, 10)%, Time: %hh:mm:ss%, Time: %hh.mm.ss% "
 local inputTable = {"ConstrolledUniqueId", {0}, {inputString}, {0}}
 local result = ConstrolledUniqueId(inputTable)
 print(inputString)
