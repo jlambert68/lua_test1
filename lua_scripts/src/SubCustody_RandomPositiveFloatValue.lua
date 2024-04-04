@@ -80,9 +80,15 @@ local function formatFloat(number, numberOfDecimals)
     end
 
     -- No decimals so remove decimal point and any following zero, i.e. 13.0
+    if dotIndex ~= nil then
     local integerWithOutDecimals = string.sub(str, 1, dotIndex -1)
 
     return integerWithOutDecimals
+
+    else
+        return str
+        
+    end
 
 end
 
@@ -96,8 +102,11 @@ end
 
 
 local function randomize(index, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer)
-   
-    math.randomseed(testCaseUuidRandomizer + index)
+
+    print(index)
+    print(testCaseUuidRandomizer)
+
+    math.randomseed(testCaseUuidRandomizer+ index)
 
     -- Generate Integer part of random number
     local randomIntegerPart = math.random()
@@ -298,18 +307,24 @@ function SubCustody_RandomPositiveFloatValue(inputTable)
     -- Call and process Random Float Value
     local respons = SubCustody_RandomFloatValue_ArrayValue(inputTableForProcessingen)
 
-    return respons
+    responseTable.success = true
+    responseTable.errorMessage = ""
+    responseTable.value = respons
+
+    return responseTable
  
 end
 
 
---[[
+
 
 local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{2, 3}, 0}
 local response = SubCustody_RandomPositiveFloatValue(inputArray)
 print("{'SubCustody_RandomPositiveFloatValue', {},{2, 3}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '81.986'")
+print("SubCustody_RandomPositiveFloatValue: " .. response.value .. " :: Expected OK - i.e. '81.986'")
 print("")
+--[[
+
 
 local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{2, 3}, 0}
 local response = SubCustody_RandomPositiveFloatValue(inputArray)
