@@ -1,4 +1,4 @@
-function ProcessConstrolledUniqueId(input, inputTable)
+function ProcessControlledUniqueId(input, inputTable)
 
     if type(input) ~= "string" then
         error("Input must be a string, got " .. type(input))
@@ -86,7 +86,7 @@ function ProcessConstrolledUniqueId(input, inputTable)
 end
 
 
-function ConstrolledUniqueId(inputTable)
+function ControlledUniqueId(inputTable)
     
     -- ExtractInput
     local arrayPositionTable  = inputTable[2]
@@ -101,7 +101,7 @@ function ConstrolledUniqueId(inputTable)
     -- Create a new Input array
     local newInputTable = {arrayPositionTable, seedValueTable}
 
-    local result = ProcessConstrolledUniqueId(textToProcess, newInputTable)
+    local result = ProcessControlledUniqueId(textToProcess, newInputTable)
 
     return result
 
@@ -109,6 +109,6 @@ end
 -- Example usage
 local inputString = "Date: %YYYY-MM-DD%, Date: %YYYYMMDD%, Date: %YYMMDD%, Time: %hh:mm:ss%, Time: %hhmmss%, Time: %hhmm%, Random Number: %nnnnn%, Random String: %a(5, 11)%, Random String Uppercase: %A(5, 10)%, Time: %hh:mm:ss%, Time: %hh.mm.ss% "
 local inputTable = {"ConstrolledUniqueId", {0}, {inputString}, {0}}
-local result = ConstrolledUniqueId(inputTable)
+local result = ControlledUniqueId(inputTable)
 print(inputString)
 print(result)
