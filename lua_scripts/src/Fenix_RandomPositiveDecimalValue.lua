@@ -1,3 +1,9 @@
+---------------------------------------------------------------------------------------
+-- Module for replacing a Fenix Inception 'Placeholder'
+--
+-- Version 1.0
+
+
 
 
 local function tableToString(tbl, sep)
@@ -26,7 +32,7 @@ end
 -- ***********************************************************************************
 -- round
 --
--- Function to round a float to a specific number of decimal places
+-- Function to round a decimal to a specific number of decimal places
 
 local function round(x, places)
 
@@ -40,10 +46,10 @@ end
 
 
 -- ***********************************************************************************
--- formatFloat
+-- formatDecimal
 --
--- Function to format a float with a specific number of decimals
-local function formatFloat(number, numberOfDecimals)
+-- Function to format a decimal with a specific number of decimals
+local function formatDecimal(number, numberOfDecimals)
 
     -- Convert the number to a string
     local str = tostring(number)
@@ -132,13 +138,13 @@ end
 
 
  -- ***********************************************************************************
--- SubCustody_RandomFloatValue_ArrayValue // SubCustody.RandomFloatValue[n](maxIntegerPartSize, numberOfDecimals)
+-- Fenix_RandomDecimalValue_ArrayValue // Fenix.RandomDecimalValue[n](maxIntegerPartSize, numberOfDecimals)
 --
 -- Function to generate random value with a specif max number of integer and speciic number of decimals
 -- inputArray := [arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer]
 
 
-local function SubCustody_RandomFloatValue_ArrayValue(inputArray)
+local function Fenix_RandomDecimalValue_ArrayValue(inputArray)
     local arrayPosition = inputArray[1][1]
     local maxIntegerPartSize = inputArray[2][1]
     local numberOfDecimals = inputArray[2][2]
@@ -148,9 +154,9 @@ local function SubCustody_RandomFloatValue_ArrayValue(inputArray)
         arrayPosition = 1
     end
 
-    local tempValueAsFloat = randomize(arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer)
+    local tempValueAsDecimal = randomize(arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer)
 
-    return formatFloat(tempValueAsFloat, numberOfDecimals)
+    return formatDecimal(tempValueAsDecimal, numberOfDecimals)
 end
 
 -- ***********************************************************************************
@@ -158,14 +164,14 @@ end
 
 
 -- ***********************************************************************************
--- SubCustody_RandomPositiveFloatValue
+-- Fenix_RandomPositiveDecimalValue
 --
 -- Function to generate random value with a specif max number of integer and speciic number of decimals
 -- Always use array value 1, first array position from user perspective
 --
 -- inputArray := [[arrayindex], [maxIntegerPartSize, numberOfDecimals], testCaseUuidRandomizer]
 
-function SubCustody_RandomPositiveFloatValue(inputTable)
+function Fenix_RandomPositiveDecimalValue(inputTable)
 
     local responseTable = {
         success = true,
@@ -301,117 +307,117 @@ function SubCustody_RandomPositiveFloatValue(inputTable)
     -- Make new Array to be send to the function that does stuff
     local inputTableForProcessingen = {arraysIndexTable, functionArgumentsTable, testcaseExecutionUuidRandomizer}
 
-    -- Call and process Random Float Value
-    local respons = SubCustody_RandomFloatValue_ArrayValue(inputTableForProcessingen)
+    -- Call and process Random Decimal Value
+    local respons = Fenix_RandomDecimalValue_ArrayValue(inputTableForProcessingen)
 
     responseTable.success = true
     responseTable.errorMessage = ""
     responseTable.value = respons
 
     return responseTable
- 
+
 end
 
 
 
-
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{2, 3}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {},{2, 3}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response.value .. " :: Expected OK - i.e. '81.986'")
-print("")
 --[[
-
-
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{2, 3}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1},{2, 3}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '81.986'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{2, 3}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{2, 3}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '81.986'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{1, 2}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {},{1, 2}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '8.98'")
+
+
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{2, 3}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{2, 3}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '81.986'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {2},{1, 2}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {2},{1, 2}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '6.48'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{1, 2}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{1, 2}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '8.98'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{1, 1}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {},{1, 1}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '8.9'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {2},{1, 2}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {2},{1, 2}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '6.48'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{1, 1}, 1}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1},{1, 1}, 1}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '6.4'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{1, 1}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{1, 1}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '8.9'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{0, 1}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {},{0, 1}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '0.9'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 1}, 1}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{1, 1}, 1}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '6.4'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{1, 0}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-
-print("{'SubCustody_RandomPositiveFloatValue', {1},{1, 0}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '8'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{0, 1}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{0, 1}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '0.9'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{0, 0}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1},{0, 0}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '0'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 0}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+
+print("{'Fenix_RandomPositiveDecimalValue', {1},{1, 0}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '8'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{6, 6}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {},{6, 6}, 0}")
-print("SubCustody_RandomPositiveFloatValue: " .. response .. " :: Expected OK - i.e. '815587.986577'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0, 0}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{0, 0}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '0'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {},{6, 10}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {},{6, 10}, 0}")
-print("SubCustody_RandomPositiveFloatValue Date: " .. response .. " :: Expected OK - i.e. '815587.9865775100'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{6, 6}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{6, 6}, 0}")
+print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '815587.986577'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{0}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1},{0}, 0}")
-print("SubCustody_RandomPositiveFloatValue Date: " .. response.errorMessage .. " :: Expected ERROR - there must be exact 2 function parameter. '[0]'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{6, 10}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{6, 10}, 0}")
+print("Fenix_RandomPositiveDecimalValue Date: " .. response .. " :: Expected OK - i.e. '815587.9865775100'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1},{}, 0}")
-print("SubCustody_RandomPositiveFloatValue Date: " .. response.errorMessage .. " :: Expected Error - there must be exact 2 function parameter but it is empty.")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{0}, 0}")
+print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected ERROR - there must be exact 2 function parameter. '[0]'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{1, 2, 3}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1},{1, 2, 3}, 0}")
-print("SubCustody_RandomPositiveFloatValue Date: " .. response.errorMessage .. " :: Expected Error - there must be exact 2 function parameter. '[1,2,3]'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{}, 0}")
+print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected Error - there must be exact 2 function parameter but it is empty.")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1, 2},{2, 3}, 0}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1, 2},{2, 3}, 0}")
-print("SubCustody_RandomPositiveFloatValue Date: " .. response.errorMessage .. " :: Expected Error - array index array can only have a maximum of one value. '[1,2]'")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 2, 3}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{1, 2, 3}, 0}")
+print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected Error - there must be exact 2 function parameter. '[1,2,3]'")
 print("")
 
-local inputArray = {"SubCustody_RandomPositiveFloatValue", {1},{2, 3}}
-local response = SubCustody_RandomPositiveFloatValue(inputArray)
-print("{'SubCustody_RandomPositiveFloatValue', {1},{2, 3}}")
-print("SubCustody_RandomPositiveFloatValue Date: " .. response.errorMessage .. " :: Expected Error - there should be exactly four rows in InputTable.")
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1, 2},{2, 3}, 0}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1, 2},{2, 3}, 0}")
+print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected Error - array index array can only have a maximum of one value. '[1,2]'")
+print("")
+
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{2, 3}}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{2, 3}}")
+print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected Error - there should be exactly four rows in InputTable.")
 print("")
 
 

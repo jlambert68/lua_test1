@@ -1,5 +1,5 @@
 local assert = require('luassert')
-local mymodule = require('src/ControlledUniqueId')
+local mymodule = require('src/Fenix_ControlledUniqueId')
 
 local tests = {}
 
@@ -12,7 +12,7 @@ end
 function tests.test_dateFormatYYYYMMDD()
     local inputString = "Today's date is %YYYY-MM-DD%"
     local inputTable = createInputTable(inputString, 0)
-    local result = ControlledUniqueId(inputTable)
+    local result = Fenix_ControlledUniqueId(inputTable)
 
     local expectedDate = os.date("%Y-%m-%d")
     local expectedString = "Today's date is " .. expectedDate
@@ -23,7 +23,7 @@ end
 function tests.test_timeFormathhmmss()
     local inputString = "Current time is %hh:mm:ss%"
     local inputTable = createInputTable(inputString, 0)
-    local result = ControlledUniqueId(inputTable)
+    local result = Fenix_ControlledUniqueId(inputTable)
 
     local expectedTime = os.date("%H:%M:%S")
     local expectedString = "Current time is " .. expectedTime
@@ -34,7 +34,7 @@ end
 function tests.test_randomNumberLength()
     local inputString = "Random number: %nnnnn%"
     local inputTable = createInputTable(inputString, 12345) -- Fixed seed for predictability
-    local result = ControlledUniqueId(inputTable)
+    local result = Fenix_ControlledUniqueId(inputTable)
 
     assert.is_equal(#result:match("%d+"), 5)  -- Check if the length of the number is 5
 end
@@ -42,7 +42,7 @@ end
 function tests.test_randomSmallLetterLength()
     local inputString = "Random small letters: %a(5, 12345)%"
     local inputTable = createInputTable(inputString, 12345)  -- Fixed seed
-    local result = ControlledUniqueId(inputTable)
+    local result = Fenix_ControlledUniqueId(inputTable)
 
     local match = result:match("Random small letters: (%a+)")
     assert.is_equal(#match, 5)  -- Check if the length of the string is 5
@@ -53,7 +53,7 @@ end
 function tests.test_randomCapitalLetterLength()
     local inputString = "Random capital letters: %A(5, 12345)%"
     local inputTable = createInputTable(inputString, 12345)  -- Fixed seed
-    local result = ControlledUniqueId(inputTable)
+    local result = Fenix_ControlledUniqueId(inputTable)
 
     local match = result:match("Random capital letters: (%a+)")
     assert.is_equal(#match, 5)  -- Check if the length of the string is 5

@@ -1,6 +1,6 @@
 
 local assert = require "luassert"
-local mymodule = require('src/SubCusotdy_TodayDateShift')
+local mymodule = require('src/Fenix_TodayDateShift')
 local date = require('date')
 
 local tests = {}
@@ -9,8 +9,8 @@ local tests = {}
 function tests.is_today_no_parameter()
     local today = date()
     local expectedDateResponse = today:fmt("%Y-%m-%d")
-    local inputArray = {"SubCustody_TodayShiftDay", {}, {}, 0}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {}, {}, 0}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(true, response.success)
@@ -23,8 +23,8 @@ end
 function tests.is_today()
     local today = date()
     local expectedDateResponse = today:fmt("%Y-%m-%d")
-    local inputArray = {"SubCustody_TodayShiftDay", {}, {0}, 0}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {}, {0}, 0}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(true, response.success)
@@ -37,8 +37,8 @@ function tests.is_yesterday()
     local today = date()
     local shoftedDate = today:adddays(-1)
     local expectedDateResponse = today:fmt("%Y-%m-%d")
-    local inputArray = {"SubCustody_TodayShiftDay", {}, {-1}, 0}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {}, {-1}, 0}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(true, response.success)
@@ -51,8 +51,8 @@ function tests.is_tomorrow()
     local today = date()
     local shoftedDate = today:adddays(1)
     local expectedDateResponse = today:fmt("%Y-%m-%d")
-    local inputArray = {"SubCustody_TodayShiftDay", {}, {1}, 0}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {}, {1}, 0}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(true, response.success)
@@ -64,8 +64,8 @@ end
 function tests.array_value_not_allowed_v1()
 
     local expectedDateResponse = ""
-    local inputArray = {"SubCustody_TodayShiftDay", {1}, {0}, 0}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {1}, {0}, 0}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(false, response.success)
@@ -76,8 +76,8 @@ end
 function tests.array_value_not_allowed_v2()
 
     local expectedDateResponse = ""
-    local inputArray = {"SubCustody_TodayShiftDay", {1,2}, {0}, 0}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {1,2}, {0}, 0}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(false, response.success)
@@ -88,8 +88,8 @@ end
 function tests.array_value_not_allowed_v3()
 
     local expectedDateResponse = ""
-    local inputArray = {"SubCustody_TodayShiftDay", {}, {1, 2}, 0}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {}, {1, 2}, 0}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(false, response.success)
@@ -100,8 +100,8 @@ end
 function tests.exact_four_parameters_in_input_table()
 
     local expectedDateResponse = ""
-    local inputArray = {"SubCustody_TodayShiftDay", {}, {1, 2}}
-    local response = SubCustody_TodayShiftDay(inputArray)
+    local inputArray = {"Fenix_TodayShiftDay", {}, {1, 2}}
+    local response = Fenix_TodayShiftDay(inputArray)
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(false, response.success)

@@ -1,11 +1,11 @@
 local date = require('date')
 
 -- Function to shift the current date by a given number of days
-function SubCustody_TodayShiftDay(inputTable)
+function Fenix_TodayShiftDay(inputTable)
     local d = date()
     
     --inputTable = {
-    --    functionName = "SubCustody_TodayShiftDay",
+    --    functionName = "Fenix_TodayShiftDay",
     --    functionArrayPositions = {1, 3},
     --    functionValuesArray = {3, 8, 9},
     --    randomSeed = 4
@@ -113,6 +113,6 @@ function TableToString(tbl, sep)
 end
 
 -- Example invocation
---local result = SubCustody_TodayShiftDay{"SubCustody_TodayShiftDay", {}, {1, 2}, 0}
+--local result = Fenix_TodayShiftDay{"Fenix_TodayShiftDay", {}, {1, 2}, 0}
 --print(result)
 

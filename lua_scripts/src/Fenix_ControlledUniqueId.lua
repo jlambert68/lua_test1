@@ -86,7 +86,7 @@ function ProcessControlledUniqueId(input, inputTable)
 end
 
 
-function ControlledUniqueId(inputTable)
+function Fenix_ControlledUniqueId(inputTable)
     
     -- ExtractInput
     local arrayPositionTable  = inputTable[2]
@@ -109,6 +109,6 @@ end
 -- Example usage
 local inputString = "Date: %YYYY-MM-DD%, Date: %YYYYMMDD%, Date: %YYMMDD%, Time: %hh:mm:ss%, Time: %hhmmss%, Time: %hhmm%, Random Number: %nnnnn%, Random String: %a(5, 11)%, Random String Uppercase: %A(5, 10)%, Time: %hh:mm:ss%, Time: %hh.mm.ss% "
 local inputTable = {"ConstrolledUniqueId", {0}, {inputString}, {0}}
-local result = ControlledUniqueId(inputTable)
+local result = Fenix_ControlledUniqueId(inputTable)
 print(inputString)
 print(result)
