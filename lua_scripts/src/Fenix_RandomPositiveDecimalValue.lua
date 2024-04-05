@@ -3,6 +3,41 @@
 --
 -- Version 1.0
 
+-- Placeholder usage
+-- 'Fenix.RandomPositiveDecimalValue(IntegerSize, FractionSize)'
+-- 'Fenix.RandomPositiveDecimalValue(IntegerSize, FractionSize, IntergerSpace, FractionSpace)'
+-- 'Fenix.RandomPositiveDecimalValue[ArraysIndex](IntegerSize, FractionSize)'
+-- 'Fenix.RandomPositiveDecimalValue[ArraysIndex](IntegerSize, FractionSize)(UseTestCaseExecutionUuidEntropi)'
+-- 'Fenix.RandomPositiveDecimalValue[ArraysIndex](IntegerSize, FractionSize)(UseTestCaseExecutionUuidEntropi, ExtraEntropiNumber)'
+-- 'Fenix.RandomPositiveDecimalValue['Integer']('Integer', 'Integer')('Boolean', 'Integer')'
+--
+-- Resesponse is a lua table;  {value, success, errorMessage} with the following types {'strings', 'boolean', 'string'}
+--
+-- Usage exmaples
+-- 'Fenix.RandomPositiveDecimalValue(2, 3)' is same as 'Fenix.RandomPositiveDecimalValue[1](2, 3)' which is the same as 'Fenix.RandomPositiveDecimalValue[1](2, 3)(true)'
+-- They all could produce i.e. '35.693' and with same input the placeholder will allways have the same output.
+-- UseTestCaseExecutionUuidEntropi(true/false) is based on the 'TestCaseExecutionUuid' and within one TestCaseExecution values with the same input will have the same output
+--
+-- 'Fenix.RandomPositiveDecimalValue[2](2, 3)(true)' clould have the output of '27.568'
+-- 'Fenix.RandomPositiveDecimalValue[2](2, 3)(false)' will allways produce the same output, independently of 'TestCaseExecutionUuid'
+-- 'Fenix.RandomPositiveDecimalValue[2](2, 3)(true, 1)' will add extra entropi to seed, by adding 1 to the value based on 'TestCaseExecutionUuid'.
+
+-- 'IntergerSpace' and 'FractionSpace' define the spaces for 'Intergerpart' and 'FractionPart'. Zeros will be added before 'Intergerpart' and after 'FractionPart'
+-- If 'IntergerSpace' is less than 'IntegerSize' then it will be ignored
+-- If 'FractionSpace' is less than 'FractionSize' then it will be ignored
+-- 'Fenix.RandomPositiveDecimalValue(1, 2, 3, 4)' will produce "004.5700"
+-- 'Fenix.RandomPositiveDecimalValue(3, 2, 2, 1)' will produce "344.54"
+-- 'Fenix.RandomPositiveDecimalValue(0, 0, 2, 2)' will produce "00.00"
+-- 
+-- Examples of different parameter values 'IntegerSize' and 'FractionSize' and a possible output
+-- 'Fenix.RandomPositiveDecimalValue(1, 2)' = "5.48"
+-- 'Fenix.RandomPositiveDecimalValue(2, 2)' = "28.87"
+-- 'Fenix.RandomPositiveDecimalValue(0, 1)' = "0.37"
+-- 'Fenix.RandomPositiveDecimalValue(0, 0)' = "0"
+-- 'Fenix.RandomPositiveDecimalValue(0, 0, 2, 3)' = "00.000"
+-- 'Fenix.RandomPositiveDecimalValue(0, 0)' = "0.0"
+-- 'Fenix.RandomPositiveDecimalValue(3, 0)' = "293"
+-- 'Fenix.RandomPositiveDecimalValue(3, 0, 3, 2)' = "293.00"
 
 
 
