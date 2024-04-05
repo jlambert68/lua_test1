@@ -152,7 +152,7 @@ function tests.array_1_parameters_1__random_0()
     local inputArray =  {"Fenix_RandomPositiveDecimalValue", {1},{1}, 0}
     local response = Fenix_RandomPositiveDecimalValue(inputArray)
     local expectedDateResponse = ""
-    local expectedErrorMessage = "Error - there must be exact 2 function parameter. '[1]'"
+    local expectedErrorMessage = "Error - there must be exact 2 or 4 function parameter. '[1]'"
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(false, response.success)
@@ -167,7 +167,7 @@ function tests.array_1_parameters___random_0()
     local inputArray =  {"Fenix_RandomPositiveDecimalValue", {1},{}, 0}
     local response = Fenix_RandomPositiveDecimalValue(inputArray)
     local expectedDateResponse = ""
-    local expectedErrorMessage = "Error - there must be exact 2 function parameter but it is empty."
+    local expectedErrorMessage = "Error - there must be exact 2 or 4 function parameter but it is empty."
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(false, response.success)
@@ -182,7 +182,7 @@ function tests.array_1_parameters_1_2_3_random_0()
     local inputArray =  {"Fenix_RandomPositiveDecimalValue", {1},{1, 2, 3}, 0}
     local response = Fenix_RandomPositiveDecimalValue(inputArray)
     local expectedDateResponse = ""
-    local expectedErrorMessage = "Error - there must be exact 2 function parameter. '[1,2,3]'"
+    local expectedErrorMessage = "Error - there must be exact 2 or 4 function parameter. '[1,2,3]'"
 
     assert.is_equal(expectedDateResponse, response.value)
     assert.is_equal(false, response.success)

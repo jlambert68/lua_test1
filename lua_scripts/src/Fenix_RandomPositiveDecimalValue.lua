@@ -135,6 +135,36 @@ end
 
 -- ***********************************************************************************
 
+-- ***********************************************************************************
+-- padValueWithZeros
+--
+-- Function to pad the integer part and the fraction part with correct number of zeros
+
+function PadValueWithZeros(valueAsString, integerSpace, fractionSpace)
+
+    -- Split the value into integer and fractional parts
+    local integerPart, fractionPart = valueAsString:match("^(%d+)%.(%d+)$")
+    if not integerPart or not fractionPart then
+        error("Invalid decimal format")
+    end
+
+    -- Pad the integer part with zeros if needed
+    if #integerPart < integerSpace then
+        integerPart = string.rep("0", integerSpace - #integerPart) .. integerPart
+    end
+
+    -- Pad the fractional part with zeros if needed
+    if #fractionPart < fractionSpace then
+        fractionPart = fractionPart .. string.rep("0", fractionSpace - #fractionPart)
+    end
+
+    -- Combine the padded parts
+    return integerPart .. "." .. fractionPart
+end
+
+-- ***********************************************************************************
+
+
 
 -- ***********************************************************************************
 -- randomize
@@ -142,9 +172,9 @@ end
 -- Function to generate random numbers
 
 
-local function randomize(index, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer)
+local function randomize(index, maxIntegerPartSize, numberOfDecimals, testCaseUuidEntropi)
 
-    math.randomseed(testCaseUuidRandomizer+ index)
+    math.randomseed(testCaseUuidEntropi+ index)
 
     -- Generate Integer part of random number
     local randomIntegerPart = math.random()
@@ -176,20 +206,20 @@ end
 -- Fenix_RandomDecimalValue_ArrayValue // Fenix.RandomDecimalValue[n](maxIntegerPartSize, numberOfDecimals)
 --
 -- Function to generate random value with a specif max number of integer and speciic number of decimals
--- inputArray := [arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer]
+-- inputArray := [arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidEntropi]
 
 
 local function Fenix_RandomDecimalValue_ArrayValue(inputArray)
     local arrayPosition = inputArray[1][1]
     local maxIntegerPartSize = inputArray[2][1]
     local numberOfDecimals = inputArray[2][2]
-    local testCaseUuidRandomizer = inputArray[3]
+    local testCaseUuidEntropi = inputArray[3]
 
     if arrayPosition < 1 then
         arrayPosition = 1
     end
 
-    local tempValueAsDecimal = randomize(arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidRandomizer)
+    local tempValueAsDecimal = randomize(arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidEntropi)
 
     return formatDecimal(tempValueAsDecimal, numberOfDecimals)
 end
@@ -204,7 +234,7 @@ end
 -- Function to generate random value with a specif max number of integer and speciic number of decimals
 -- Always use array value 1, first array position from user perspective
 --
--- inputArray := [[arrayindex], [maxIntegerPartSize, numberOfDecimals], testCaseUuidRandomizer]
+-- inputArray := [[arrayindex], [maxIntegerPartSize, numberOfDecimals], testCaseUuidEntropi]
 
 function Fenix_RandomPositiveDecimalValue(inputTable)
 
@@ -229,6 +259,7 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
 
     -- Extract ArraysIndexArray
     local arraysIndexTable = inputTable[2]
+    local arraysIndexToUse
 
     -- Secure that ArraysIndexArray is not emtpty or only have one value
     if #arraysIndexTable > 1 then
@@ -246,7 +277,11 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
     elseif  #arraysIndexTable == 0 then
         -- zero array index, so use first index position
 
-        arraysIndexTable = {1}
+        arraysIndexToUse = 1
+
+    else
+        -- Array has one value
+        arraysIndexToUse = arraysIndexTable[1]
 
     end
 
@@ -254,14 +289,14 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
     -- Extract FunctionArgumentsArray
     local functionArgumentsTable = inputTable[3]
 
-    -- Handle if function arguments is not 2 arguments
-    if #functionArgumentsTable ~=  2 then
+    -- Handle if function arguments is not 2 arguments or 4 arguments
+    if #functionArgumentsTable ~=  2 and #functionArgumentsTable ~=  4 then
 
         -- More then 2 arguments
         if #functionArgumentsTable > 2 then
 
             local tableAsString = tableToString(functionArgumentsTable, ",")
-            local error_message = "Error - there must be exact 2 function parameter. '" .. tableAsString .. "'"
+            local error_message = "Error - there must be exact 2 or 4 function parameter. '" .. tableAsString .. "'"
 
             responseTable.success = false
             responseTable.errorMessage = error_message
@@ -273,7 +308,7 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
 
                 local result = "[" .. tostring(functionArgumentsTable[1]) .. "]"
 
-                local error_message = "Error - there must be exact 2 function parameter. '" .. result .. "'"
+                local error_message = "Error - there must be exact 2 or 4 function parameter. '" .. result .. "'"
 
                 responseTable.success = false
                 responseTable.errorMessage = error_message
@@ -282,7 +317,7 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
 
             -- Zero values    
         else
-                local error_message = "Error - there must be exact 2 function parameter but it is empty."
+                local error_message = "Error - there must be exact 2 or 4 function parameter but it is empty."
 
                 responseTable.success = false
                 responseTable.errorMessage = error_message
@@ -307,40 +342,48 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
         end
     end
 
-    -- Extract randomnizer
-    local testcaseExecutionUuidRandomizer =  inputTable[4]
+    -- Extract entropi
+    local entropiTable = inputTable[4]
 
-    -- Must be an integer 
-    if type(testcaseExecutionUuidRandomizer) ~=  "number" then
+    -- Verify that content in Entropi is of type 'Table'
 
 
-            -- Verify if it is a Table
-            if type(testcaseExecutionUuidRandomizer) == "table" then
+    if type(entropiTable) ~= "table" then
 
-                -- Convert array to string
-                local tableAsString = tableToString (functionArgumentsTable, ",")
+        local error_message = "Error - Entropi is not of type 'Table', but is of type '" .. type(entropiTable)  .. "'."
 
-                local error_message = "Error - TestcaseExecutionUuidRandomizer is of type Table, must be type integer. '" .. tableAsString .. "'"
+        responseTable.success = false
+        responseTable.errorMessage = error_message
 
-                responseTable.success = false
-                responseTable.errorMessage = error_message
-
-            return responseTable
-
-            end
-
-            -- Verify if it is a string
-            if type(testcaseExecutionUuidRandomizer) == "string" then
-
-                local error_message = "Error - TestcaseExecutionUuidRandomizer is of type String, must be type integer. '" .. testcaseExecutionUuidRandomizer .. "'"
-
-                responseTable.success = false
-                responseTable.errorMessage = error_message
-            end
+        return responseTable
     end
 
+    -- verify that each paramter in Entropi table is a number and sum up all entry values into one
+    local entropiValue
+    
+    for _, v in ipairs(entropiTable) do
+
+        -- Must be an integer 
+        if type(v) ~=  "number" then
+            local tableAsString = tableToString (entropiTable, ",")
+            local error_message = "Error - entropi parameters must be of type 'Integer', expect for first parameter which is a 'Boolean' '" .. tableAsString .. "'"
+
+            responseTable.success = false
+            responseTable.errorMessage = error_message
+
+
+        else
+            entropiValue = entropiValue + v
+        end
+
+    end
+
+
+
+
+
     -- Make new Array to be send to the function that does stuff
-    local inputTableForProcessingen = {arraysIndexTable, functionArgumentsTable, testcaseExecutionUuidRandomizer}
+    local inputTableForProcessingen = {arraysIndexTable, functionArgumentsTable, testcaseExecutionUuidEntropi}
 
     -- Call and process Random Decimal Value
     local respons = Fenix_RandomDecimalValue_ArrayValue(inputTableForProcessingen)
