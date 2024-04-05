@@ -140,12 +140,17 @@ end
 --
 -- Function to pad the integer part and the fraction part with correct number of zeros
 
-function PadValueWithZeros(valueAsString, integerSpace, fractionSpace)
+local function padValueWithZeros(valueAsString, integerSpace, fractionSpace)
 
     -- Split the value into integer and fractional parts
     local integerPart, fractionPart = valueAsString:match("^(%d+)%.(%d+)$")
+    local noFractions = false
+    
+    -- Check if value only has intgerpart
     if not integerPart or not fractionPart then
-        error("Invalid decimal format")
+        integerPart = valueAsString
+        fractionPart = ""
+        noFractions = true
     end
 
     -- Pad the integer part with zeros if needed
@@ -154,12 +159,22 @@ function PadValueWithZeros(valueAsString, integerSpace, fractionSpace)
     end
 
     -- Pad the fractional part with zeros if needed
-    if #fractionPart < fractionSpace then
+    if #fractionPart < fractionSpace and noFractions == false then
         fractionPart = fractionPart .. string.rep("0", fractionSpace - #fractionPart)
     end
 
-    -- Combine the padded parts
-    return integerPart .. "." .. fractionPart
+    -- Combine the padded parts if there are two parts
+    local zeroPaddedValue = ""
+
+    if noFractions == false then
+        zeroPaddedValue = integerPart .. "." .. fractionPart
+
+    else
+        zeroPaddedValue = integerPart
+
+    end
+
+    return zeroPaddedValue
 end
 
 -- ***********************************************************************************
@@ -172,9 +187,9 @@ end
 -- Function to generate random numbers
 
 
-local function randomize(index, maxIntegerPartSize, numberOfDecimals, testCaseUuidEntropi)
+local function randomize(arrayIndex, maxIntegerPartSize, numberOfDecimals, baseEntropiToUse)
 
-    math.randomseed(testCaseUuidEntropi+ index)
+    math.randomseed(baseEntropiToUse+ arrayIndex)
 
     -- Generate Integer part of random number
     local randomIntegerPart = math.random()
@@ -210,18 +225,29 @@ end
 
 
 local function Fenix_RandomDecimalValue_ArrayValue(inputArray)
-    local arrayPosition = inputArray[1][1]
+    local arrayPositionToUse = inputArray[1]
     local maxIntegerPartSize = inputArray[2][1]
     local numberOfDecimals = inputArray[2][2]
-    local testCaseUuidEntropi = inputArray[3]
 
-    if arrayPosition < 1 then
-        arrayPosition = 1
+    local entropiToUse = inputArray[3]
+
+    local tempValueAsDecimal = randomize(arrayPositionToUse, maxIntegerPartSize, numberOfDecimals, entropiToUse)
+
+    local valueIsBaseFormated =  formatDecimal(tempValueAsDecimal, numberOfDecimals)
+
+    -- No padding should be done
+    if #inputArray[2] == 2 then
+        return valueIsBaseFormated
     end
 
-    local tempValueAsDecimal = randomize(arrayPosition, maxIntegerPartSize, numberOfDecimals, testCaseUuidEntropi)
+    -- extract padding sizes
+    local integerSpace = inputArray[2][3]
+    local fractionSpace = inputArray[2][4]
 
-    return formatDecimal(tempValueAsDecimal, numberOfDecimals)
+    local zeroPaddedValue = padValueWithZeros(valueIsBaseFormated, integerSpace, fractionSpace)
+
+    return zeroPaddedValue
+
 end
 
 -- ***********************************************************************************
@@ -280,7 +306,7 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
         arraysIndexToUse = 1
 
     else
-        -- Array has one value
+        -- Array has one value so use that
         arraysIndexToUse = arraysIndexTable[1]
 
     end
@@ -346,8 +372,6 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
     local entropiTable = inputTable[4]
 
     -- Verify that content in Entropi is of type 'Table'
-
-
     if type(entropiTable) ~= "table" then
 
         local error_message = "Error - Entropi is not of type 'Table', but is of type '" .. type(entropiTable)  .. "'."
@@ -359,7 +383,7 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
     end
 
     -- verify that each paramter in Entropi table is a number and sum up all entry values into one
-    local entropiValue
+    local entropiValue = 0
     
     for _, v in ipairs(entropiTable) do
 
@@ -383,7 +407,7 @@ function Fenix_RandomPositiveDecimalValue(inputTable)
 
 
     -- Make new Array to be send to the function that does stuff
-    local inputTableForProcessingen = {arraysIndexTable, functionArgumentsTable, testcaseExecutionUuidEntropi}
+    local inputTableForProcessingen = {arraysIndexToUse, functionArgumentsTable, entropiValue}
 
     -- Call and process Random Decimal Value
     local respons = Fenix_RandomDecimalValue_ArrayValue(inputTableForProcessingen)
@@ -398,97 +422,120 @@ end
 
 
 
---[[
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{2, 3}, 0}
+
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{2, 3}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {},{2, 3}, 0}")
+print("{'Fenix_RandomPositiveDecimalValue', {},{2, 3}, {0}}")
 print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '81.986'")
 print("")
 
 
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{2, 3}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{2, 3}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {1},{2, 3}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '81.986'")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{2, 3}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '81.986'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{1, 2}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{1, 2}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {},{1, 2}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '8.98'")
+print("{'Fenix_RandomPositiveDecimalValue', {},{1, 2}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '8.98'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {2},{1, 2}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {2},{1, 2}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {2},{1, 2}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '6.48'")
+print("{'Fenix_RandomPositiveDecimalValue', {2},{1, 2}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '6.48'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{1, 1}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{1, 1}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {},{1, 1}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '8.9'")
+print("{'Fenix_RandomPositiveDecimalValue', {},{1, 1}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '8.9'")
+print("")
+
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{1, 1}, 1}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{1, 1}, 1}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '6.4'")
 print("")
 
 local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 1}, 1}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
 print("{'Fenix_RandomPositiveDecimalValue', {1},{1, 1}, 1}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '6.4'")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '6.4'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{0, 1}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{0, 1}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {},{0, 1}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '0.9'")
+print("{'Fenix_RandomPositiveDecimalValue', {},{0, 1}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '0.9'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 0}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 0}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-
-print("{'Fenix_RandomPositiveDecimalValue', {1},{1, 0}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '8'")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{1, {0}}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '8'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0, 0}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0, 0}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {1},{0, 0}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '0'")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{0, {0}}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '0'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{6, 6}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0, 0, 2, 3}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {},{6, 6}, 0}")
-print("Fenix_RandomPositiveDecimalValue: " .. response .. " :: Expected OK - i.e. '815587.986577'")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{0, 0, 2, 3}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '0'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{6, 10}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0, 2, 3, 4}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {},{6, 10}, 0}")
-print("Fenix_RandomPositiveDecimalValue Date: " .. response .. " :: Expected OK - i.e. '815587.9865775100'")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{0, 2, 3, 4}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '0'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{2, 2, 3, 4}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {1},{0}, 0}")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{2, 2, 3, 4}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '0'")
+print("")
+
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{6, 6}, {0}}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{6, 6}, {0}}")
+print("Fenix_RandomPositiveDecimalValue: " .. response.value .. " :: Expected OK - i.e. '815587.986577'")
+print("")
+
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {},{6, 10}, {0}}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {},{6, 10}, {0}}")
+print("Fenix_RandomPositiveDecimalValue Date: " .. response.value .. " :: Expected OK - i.e. '815587.9865775100'")
+print("")
+
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{0}, {0}}
+local response = Fenix_RandomPositiveDecimalValue(inputArray)
+print("{'Fenix_RandomPositiveDecimalValue', {1},{0}, {0}}")
 print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected ERROR - there must be exact 2 function parameter. '[0]'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {1},{}, 0}")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{}, {0}}")
 print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected Error - there must be exact 2 function parameter but it is empty.")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 2, 3}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1},{1, 2, 3}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {1},{1, 2, 3}, 0}")
+print("{'Fenix_RandomPositiveDecimalValue', {1},{1, 2, 3}, {0}}")
 print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected Error - there must be exact 2 function parameter. '[1,2,3]'")
 print("")
 
-local inputArray = {"Fenix_RandomPositiveDecimalValue", {1, 2},{2, 3}, 0}
+local inputArray = {"Fenix_RandomPositiveDecimalValue", {1, 2},{2, 3}, {0}}
 local response = Fenix_RandomPositiveDecimalValue(inputArray)
-print("{'Fenix_RandomPositiveDecimalValue', {1, 2},{2, 3}, 0}")
+print("{'Fenix_RandomPositiveDecimalValue', {1, 2},{2, 3}, {0}}")
 print("Fenix_RandomPositiveDecimalValue Date: " .. response.errorMessage .. " :: Expected Error - array index array can only have a maximum of one value. '[1,2]'")
 print("")
 
